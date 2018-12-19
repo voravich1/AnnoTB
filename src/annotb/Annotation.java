@@ -15,5 +15,12 @@ public class Annotation {
         
     }
     
+    public void readVCF(String vcfFile){
+        
+    }
+    
+    public void readDBFile(String dbFile){
+        
+    }
     
 }
