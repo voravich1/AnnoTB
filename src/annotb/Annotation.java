@@ -5,6 +5,9 @@
  */
 package annotb;
 
+import htsjdk.variant.vcf.VCFFileReader;
+import java.io.File;
+
 /**
  *
  * @author worawich
@@ -15,7 +18,11 @@ public class Annotation {
         
     }
     
-    public void readVCF(String vcfFile){
+    public static void readVCF(String vcfFileName){
+        File vcf_File = new File(vcfFileName);
+        VCFFileReader vcfReader = new VCFFileReader(vcf_File);
+        
+     
         
     }
     
