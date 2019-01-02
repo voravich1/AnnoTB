@@ -22,7 +22,7 @@ public class Annotation {
         File vcf_File = new File(vcfFileName);
         VCFFileReader vcfReader = new VCFFileReader(vcf_File);
         
-     
+        
         
     }
     
