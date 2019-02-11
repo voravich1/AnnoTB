@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author worawich
  */
 public class DatabaseTBContext {
-
+     
     private ArrayList<String> posStart;
     private ArrayList<String> posStop;
     private ArrayList<String> refBase;
