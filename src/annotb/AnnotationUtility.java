@@ -49,8 +49,8 @@ public class AnnotationUtility {
                         if(headerFlag == true){
                             
 //                            headerFlag = false;
-                        }else if(!varVMapHG37.containsKey(hgvsKey) && headerFlag == false){
-                            // If line is not header
+                        }else if(!varVMapHG37.containsKey(hgvsKey) && headerFlag == false && !data[7].isEmpty()){
+                            // If hgvskey is not exist before, line is not header and data in column 7 has value 
                             
                             String hgvsGenomic = data[7];
                             String chr = data[8];
@@ -149,8 +149,8 @@ public class AnnotationUtility {
                         if(headerFlag == true){
                             
 //                            headerFlag = false;
-                        }else if(!varVMapHG38.containsKey(hgvsKey) && headerFlag == false){
-                            // If line is not header
+                        }else if(!varVMapHG38.containsKey(hgvsKey) && headerFlag == false && !data[13].isEmpty()){
+                            // If hgvsKey not exist before, line is not header and data column 13 has value
                             
                             String hgvsGenomic = data[13];
                             String chr = data[14];
@@ -259,7 +259,7 @@ public class AnnotationUtility {
             headerFlag = true;
             
             File hbVarDBSNP = new File(HbVarDBSNP);
-            try(BufferedReader in = new BufferedReader(new FileReader(varV.getPath()))) {
+            try(BufferedReader in = new BufferedReader(new FileReader(hbVarDBSNP))) {
                 String line;
                 while ((line = in.readLine()) != null) {
                     String[] data = line.split("\t");
@@ -330,6 +330,8 @@ public class AnnotationUtility {
              * Write vcf header
              */
             writerVcf.write("##fileformat=VCFv4.3");
+            writerVcf.write("\n");
+            writerVcf.write("##reference=GRCh37");
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=PUBMED,Number=.,Type=String,Description=\"PubMed ID\">");
             writerVcf.write("\n");
@@ -419,6 +421,8 @@ public class AnnotationUtility {
              * Write vcf header
              */
             writerVcf.write("##fileformat=VCFv4.3");
+            writerVcf.write("\n");
+            writerVcf.write("##reference=GRCh38");
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=PUBMED,Number=.,Type=String,Description=\"PubMed ID\">");
             writerVcf.write("\n");
