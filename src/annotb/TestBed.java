@@ -16,8 +16,8 @@ public class TestBed {
     
     public static void main(String[] args) throws IOException{
         
-        String varV = "/Users/worawich/Reference/Thalassemia/variantValidatorTest.txt";
-        String dbSNP = "/Users/worawich/Reference/Thalassemia/dbSNPTest.txt";
+        String varV = "/Users/worawich/Reference/Thalassemia_HbVar_DB/variantValidator.txt";
+        String dbSNP = "/Users/worawich/Reference/Thalassemia_HbVar_DB/dbSNP_HbVar_DB.txt";
                 
         createHBVarDB(varV,dbSNP);
         

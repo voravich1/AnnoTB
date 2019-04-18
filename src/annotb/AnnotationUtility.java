@@ -266,7 +266,7 @@ public class AnnotationUtility {
                     String hgvsKey = data[0];
                     
                     /**
-                     * Create Map for 
+                     * Create Map for dbSNPHbVar
                      */
                     if(data.length>5){
                         if(headerFlag == true){
@@ -275,13 +275,18 @@ public class AnnotationUtility {
                         }else if(!dbSNPMap.containsKey(hgvsKey) && headerFlag == false){
                             String hbVarID = data[5];
                             String pubMedID = data[4];
-                                
+                            
+                            
+                            if(hbVarID.contains("_")){
+                                hbVarID = hbVarID.split("_")[0];
+                            }
+                            
                             String hbvarInfo = hbVarID+","+pubMedID;
                             dbSNPMap.put(hgvsKey, hbvarInfo);
                             
                         }
-                    }
-                    headerFlag = false;
+                        headerFlag = false;
+                    }                  
                 }
             }catch(Exception e){
                 System.out.println(e);
@@ -335,11 +340,13 @@ public class AnnotationUtility {
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=PUBMED,Number=.,Type=String,Description=\"PubMed ID\">");
             writerVcf.write("\n");
+            writerVcf.write("##INFO=<ID=END,Number=1,Type=String,Description=\"End position of variant. It will be null if position not define\">");
+            writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=HBID,Number=1,Type=String,Description=\"Hbvar ID\">");
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Structural variant type\">");
             writerVcf.write("\n");
-            writerVcf.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT");
+            writerVcf.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO");
             writerVcf.write("\n");
             /*********************/
             for(Map.Entry<String,String> entry : dbSNPMap.entrySet()){
@@ -366,27 +373,28 @@ public class AnnotationUtility {
                 }
                 
                 
-                
-                String[] varVInfo = varVMapHG37.get(hgvs).split(",");
-                String chr = varVInfo[0]; 
-                String start = varVInfo[1];
-                String ref = varVInfo[3];
-                String alt = varVInfo[4];
-                String svType = varVInfo[5];
-                String stop = varVInfo[2];
-                String dbType = varVInfo[6];
-                
-                if(dbType.equals("bed")){
-                    String info = hbVarID+"|"+pubMedInfo;
-                    String bedInfo = chr+"\t"+start+"\t"+stop+"\t"+info;
-                    writerBed.write(bedInfo);
-                    writerBed.write("\n");
-                }else if(dbType.equals("vcf")){
-                    String info = "SVTYPE="+svType+";HBID="+hbVarID+";PUBMED="+pubMedInfo;
-                    String writeInfo = chr+"\t"+start+"\t"+hbVarID+"\t"+ref+"\t"+alt+"\t"+"."+"\t"+"."+"\t"+info+"\t"+".";
-                    writerVcf.write(writeInfo);
-                    writerVcf.write("\n");
-                }   
+                if(varVMapHG37.containsKey(hgvs)){
+                    String[] varVInfo = varVMapHG37.get(hgvs).split(",");
+                    String chr = varVInfo[0]; 
+                    String start = varVInfo[1];
+                    String ref = varVInfo[3];
+                    String alt = varVInfo[4];
+                    String svType = varVInfo[5];
+                    String stop = varVInfo[2];
+                    String dbType = varVInfo[6];
+
+                    if(dbType.equals("bed")){
+                        String info = hbVarID+"|"+pubMedInfo;
+                        String bedInfo = chr+"\t"+start+"\t"+stop+"\t"+info;
+                        writerBed.write(bedInfo);
+                        writerBed.write("\n");
+                    }else if(dbType.equals("vcf")){
+                        String info = "SVTYPE="+svType+";END="+stop+";HBID="+hbVarID+";PUBMED="+pubMedInfo;
+                        String writeInfo = chr+"\t"+start+"\t"+hbVarID+"\t"+ref+"\t"+alt+"\t"+"."+"\t"+"."+"\t"+info;
+                        writerVcf.write(writeInfo);
+                        writerVcf.write("\n");
+                    }
+                }
             }
             
             writerBed.flush();
@@ -426,11 +434,13 @@ public class AnnotationUtility {
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=PUBMED,Number=.,Type=String,Description=\"PubMed ID\">");
             writerVcf.write("\n");
+            writerVcf.write("##INFO=<ID=END,Number=1,Type=String,Description=\"End position of variant. It will be null if position not define\">");
+            writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=HBID,Number=1,Type=String,Description=\"Hbvar ID\">");
             writerVcf.write("\n");
             writerVcf.write("##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Structural variant type\">");
             writerVcf.write("\n");
-            writerVcf.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT");
+            writerVcf.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO");
             writerVcf.write("\n");
             /*********************/
             for(Map.Entry<String,String> entry : dbSNPMap.entrySet()){
@@ -457,27 +467,28 @@ public class AnnotationUtility {
                 }
                 
                 
-                
-                String[] varVInfo = varVMapHG38.get(hgvs).split(",");
-                String chr = varVInfo[0]; 
-                String start = varVInfo[1];
-                String ref = varVInfo[3];
-                String alt = varVInfo[4];
-                String svType = varVInfo[5];
-                String stop = varVInfo[2];
-                String dbType = varVInfo[6];
-                
-                if(dbType.equals("bed")){
-                    String info = hbVarID+"|"+pubMedInfo;
-                    String bedInfo = chr+"\t"+start+"\t"+stop+"\t"+info;
-                    writerBed.write(bedInfo);
-                    writerBed.write("\n");
-                }else if(dbType.equals("vcf")){
-                    String info = "SVTYPE="+svType+";HBID="+hbVarID+";PUBMED="+pubMedInfo;
-                    String writeInfo = chr+"\t"+start+"\t"+hbVarID+"\t"+ref+"\t"+alt+"\t"+"."+"\t"+"."+"\t"+info+"\t"+".";
-                    writerVcf.write(writeInfo);
-                    writerVcf.write("\n");
-                }   
+                if(varVMapHG38.containsKey(hgvs)){
+                    String[] varVInfo = varVMapHG38.get(hgvs).split(",");
+                    String chr = varVInfo[0]; 
+                    String start = varVInfo[1];
+                    String ref = varVInfo[3];
+                    String alt = varVInfo[4];
+                    String svType = varVInfo[5];
+                    String stop = varVInfo[2];
+                    String dbType = varVInfo[6];
+
+                    if(dbType.equals("bed")){
+                        String info = hbVarID+"|"+pubMedInfo;
+                        String bedInfo = chr+"\t"+start+"\t"+stop+"\t"+info;
+                        writerBed.write(bedInfo);
+                        writerBed.write("\n");
+                    }else if(dbType.equals("vcf")){
+                        String info = "SVTYPE="+svType+";END="+stop+";HBID="+hbVarID+";PUBMED="+pubMedInfo;
+                        String writeInfo = chr+"\t"+start+"\t"+hbVarID+"\t"+ref+"\t"+alt+"\t"+"."+"\t"+"."+"\t"+info;
+                        writerVcf.write(writeInfo);
+                        writerVcf.write("\n");
+                    }
+                }
             }
             writerBed.flush();
             writerBed.close();
